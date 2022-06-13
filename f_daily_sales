@@ -1,0 +1,11 @@
+delete from mart.f_daily_sales
+where date_id::date in (
+	select distinct date_time::date from staging.user_order_log
+	);
+  
+-- INSERT -- не удаляйте эту строку
+insert into mart.f_daily_sales
+select distinct t1.date_time, t1.item_id, t1.customer_id, t1.quantity, t1.payment_amount 
+from staging.user_order_log t1
+where date_time in (
+select (year_num || '-' || month_num || '-' || day_num)::date from mart.d_calendar);
