@@ -1,3 +1,25 @@
+/*
+drop table if exists public.d_city;
+create table if not exists public.d_city
+as
+select *
+from stage.user_order_log uol ;
+*/
+
+-- CREATE CALENDAR
+drop table if exists public.d_calendar;
+create table if not exists public.d_calendar
+as
+select date::date,
+		extract(day from  date) day_num,
+		extract(month from  date) month_num,
+		to_char(date :: date,'Mon') month_name,
+		extract(year from  date) year_num
+      from generate_series( date '2020-01-01' ,
+                            date '2022-01-01',
+                            interval '1 day') as t(date);
+              
+
 delete from mart.f_daily_sales
 where date_id::date in (
 	select distinct date_time::date from stage.user_order_log
@@ -8,4 +30,4 @@ insert into mart.f_daily_sales
 select distinct t1.date_time, t1.item_id, t1.customer_id, t1.quantity, t1.payment_amount 
 from stage.user_order_log t1
 where date_time in (
-select (year_num || '-' || month_num || '-' || day_num)::date from mart.d_calendar);
+select (year_num || '-' || month_num || '-' || day_num)::date from public.d_calendar);
