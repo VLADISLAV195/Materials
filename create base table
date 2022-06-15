@@ -1,0 +1,78 @@
+CREATE schema if not exists stage; 
+drop table if exists stage.user_order_log;
+CREATE TABLE stage.user_order_log(
+id int,
+date_time TIMESTAMP,
+city_id int,
+city_name varchar(100),
+customer_id int8,
+first_name varchar(100),
+last_name varchar(100),
+item_id int,
+item_name varchar(100),
+quantity bigint,
+payment_amount numeric(14,2),
+   PRIMARY KEY (ID)
+);
+
+insert into stage.user_order_log 
+select distinct id,
+date_time :: TIMESTAMP,
+city_id,
+city_name :: varchar(100),
+customer_id,
+first_name :: varchar(100),
+last_name :: varchar(100),
+item_id,
+item_name :: varchar(100),
+quantity,
+payment_amount          
+from stage.user_order_log_csv 
+order by 1;
+
+
+drop table if exists stage.user_activity_log;
+CREATE TABLE stage.user_activity_log(
+   ID int ,
+   date_time          TIMESTAMP ,
+   action_id             BIGINT ,
+   customer_id             BIGINT ,
+   quantity             BIGINT ,
+   PRIMARY KEY (ID)
+);
+
+insert into stage.user_activity_log 
+select distinct ID  ,
+   date_time :: TIMESTAMP,
+   action_id ,
+   customer_id,
+   quantity            
+from stage.user_activity_log_csv 
+order by 1;
+
+
+
+drop table if exists stage.customer_research;
+CREATE TABLE stage.customer_research(
+   	ID serial ,
+   	date_id timestamp,
+   	category_id int,
+	geo_id int,
+	sales_qty int,
+	sales_amt numeric(14,2),
+   PRIMARY KEY (ID)
+);
+
+insert into stage.customer_research (date_id ,
+   	category_id ,
+	geo_id ,
+	sales_qty,
+	sales_amt )
+select 
+date_id :: timestamp,
+category_id,
+geo_id,
+sales_qty,
+sales_amt         
+from stage.customer_research_csv 
+order by 1;
