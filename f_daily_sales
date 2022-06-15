@@ -5,7 +5,7 @@ as
 select *
 from stage.user_order_log uol ;
 */
-
+create schema if not exists mart;
 -- CREATE CALENDAR
 drop table if exists public.d_calendar;
 create table if not exists public.d_calendar
