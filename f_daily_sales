@@ -19,7 +19,18 @@ select date::date,
                             date '2022-01-01',
                             interval '1 day') as t(date);
               
-
+CREATE TABLE mart.f_daily_sales(
+   date_id          INT NOT NULL,
+   item_id          INT NOT NULL,
+   customer_id      INT NOT NULL,
+   price            decimal(10,2), --цена из прайс листа
+   quantity         BIGINT,
+   payment_amount   DECIMAL(10,2)--,
+   --PRIMARY KEY (date_id, item_id, customer_id),
+   --FOREIGN KEY (date_id) REFERENCES d_calendar(date_id) ON UPDATE CASCADE,
+   --FOREIGN KEY (item_id) REFERENCES d_item(item_id) ON UPDATE CASCADE,
+   --FOREIGN KEY (customer_id) REFERENCES d_customer(customer_id) ON UPDATE CASCADE
+);
 delete from mart.f_daily_sales
 where date_id::date in (
 	select distinct date_time::date from stage.user_order_log
